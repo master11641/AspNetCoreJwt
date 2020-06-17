@@ -65,38 +65,25 @@ namespace core {
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure (IApplicationBuilder app, IHostingEnvironment env) {
-            // if (env.IsDevelopment ()) {
-            //     app.UseDeveloperExceptionPage ();
-            // } else {
-            //     app.UseExceptionHandler ("/Home/Error");
-            // }
-            // // global cors policy
-            // app.UseCors (x => x
-            //     .AllowAnyOrigin ()
-            //     .AllowAnyMethod ()
-            //     .AllowAnyHeader ());
-            // app.UseStaticFiles ();
-            // app.UseAuthentication ();
-            // app.UseMvc (routes => {
-            //    //  routes.MapRoute ("areaRoute", "{area:exists}/{controller=Users}/{action=Index}/{id?}");
-            //     routes.MapRoute (
-            //         name: "default",
-            //         template: "{controller=Home}/{action=Index}/{id?}");
-            // });
-            app.UseRouting();
-
+            if (env.IsDevelopment ()) {
+                app.UseDeveloperExceptionPage ();
+            } else {
+                app.UseExceptionHandler ("/Home/Error");
+            }
             // global cors policy
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
-
-            app.UseAuthentication();
-            app.UseAuthorization();
-            
-            app.UseEndpoints(endpoints => {
-                endpoints.MapControllers();
+            app.UseCors (x => x
+                .AllowAnyOrigin ()
+                .AllowAnyMethod ()
+                .AllowAnyHeader ());
+            app.UseStaticFiles ();
+            app.UseAuthentication ();
+            app.UseMvc (routes => {
+               //  routes.MapRoute ("areaRoute", "{area:exists}/{controller=Users}/{action=Index}/{id?}");
+                routes.MapRoute (
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
+            app.UseRouting();
         }
     }
 }

@@ -22,16 +22,16 @@ namespace Core.Services
     public class UserService : IUserService
     {
         // users hardcoded for simplicity, store in a db with hashed passwords in production applications
-        private List<User> _users = new List<User>
-        { 
-            new User { Id = 1, FirstName = "Test", LastName = "User", Username = "test", Password = "test" } 
-        };
+        private List<User> _users ;
 
         private readonly AppSettings _appSettings;
+        private BloggingContext _context;
 
-        public UserService(IOptions<AppSettings> appSettings)
+        public UserService(IOptions<AppSettings> appSettings,BloggingContext context)
         {
             _appSettings = appSettings.Value;
+            _context = context;
+            _users = context.Users.ToList();
         }
 
         public AuthenticateResponse Authenticate(AuthenticateRequest model)
