@@ -1,0 +1,15 @@
+C:\Users\alireza\Desktop\core\bin\Debug\netcoreapp2.0\appsettings.Development.json
+C:\Users\alireza\Desktop\core\bin\Debug\netcoreapp2.0\appsettings.json
+C:\Users\alireza\Desktop\core\bin\Debug\netcoreapp2.0\bundleconfig.json
+C:\Users\alireza\Desktop\core\bin\Debug\netcoreapp2.0\core.deps.json
+C:\Users\alireza\Desktop\core\bin\Debug\netcoreapp2.0\core.runtimeconfig.json
+C:\Users\alireza\Desktop\core\bin\Debug\netcoreapp2.0\core.runtimeconfig.dev.json
+C:\Users\alireza\Desktop\core\bin\Debug\netcoreapp2.0\core.dll
+C:\Users\alireza\Desktop\core\bin\Debug\netcoreapp2.0\core.pdb
+C:\Users\alireza\Desktop\core\obj\Debug\netcoreapp2.0\core.csprojAssemblyReference.cache
+C:\Users\alireza\Desktop\core\obj\Debug\netcoreapp2.0\core.AssemblyInfoInputs.cache
+C:\Users\alireza\Desktop\core\obj\Debug\netcoreapp2.0\core.AssemblyInfo.cs
+C:\Users\alireza\Desktop\core\obj\Debug\netcoreapp2.0\core.csproj.CoreCompileInputs.cache
+C:\Users\alireza\Desktop\core\obj\Debug\netcoreapp2.0\core.dll
+C:\Users\alireza\Desktop\core\obj\Debug\netcoreapp2.0\core.pdb
+C:\Users\alireza\Desktop\core\obj\Debug\netcoreapp2.0\core.genruntimeconfig.cache
