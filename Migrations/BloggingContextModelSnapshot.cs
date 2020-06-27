@@ -19,6 +19,54 @@ namespace core.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("core.Address", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FullAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Latitude")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Longitude")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MobileDeliver")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameDeliver")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneDeliver")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostalCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sector")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Addresses");
+                });
+
             modelBuilder.Entity("core.Adver", b =>
                 {
                     b.Property<int>("Id")
@@ -63,6 +111,36 @@ namespace core.Migrations
                     b.ToTable("Blogs");
                 });
 
+            modelBuilder.Entity("core.City", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Center")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Code")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DateCity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProvinceId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProvinceId");
+
+                    b.ToTable("Cities");
+                });
+
             modelBuilder.Entity("core.Post", b =>
                 {
                     b.Property<int>("PostId")
@@ -84,6 +162,32 @@ namespace core.Migrations
                     b.HasIndex("BlogId");
 
                     b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("core.Province", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Center")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Code")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProvinceDate")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Provinces");
                 });
 
             modelBuilder.Entity("core.TcategoryGoods", b =>
@@ -124,6 +228,18 @@ namespace core.Migrations
                     b.HasIndex("ParentID");
 
                     b.ToTable("TcategoryStores");
+                });
+
+            modelBuilder.Entity("core.Tfactor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tfactors");
                 });
 
             modelBuilder.Entity("core.Tgoods", b =>
@@ -217,12 +333,17 @@ namespace core.Migrations
                     b.Property<int>("TgoodsAttributeId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("TorderId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TgoodsAttributeId");
+
+                    b.HasIndex("TorderId");
 
                     b.ToTable("TgoodsAttributeValues");
                 });
@@ -300,6 +421,10 @@ namespace core.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("TfactorId");
+
                     b.HasIndex("TgoodsId");
 
                     b.ToTable("Torders");
@@ -348,6 +473,9 @@ namespace core.Migrations
                     b.Property<bool>("IsFreeDeliveryExist")
                         .HasColumnType("bit");
 
+                    b.Property<string>("LogoImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("TcategoryStoreId")
                         .HasColumnType("int");
 
@@ -386,6 +514,28 @@ namespace core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("core.Address", b =>
+                {
+                    b.HasOne("core.City", "City")
+                        .WithMany("Addresses")
+                        .HasForeignKey("CityId");
+
+                    b.HasOne("core.User", "User")
+                        .WithMany("Addresses")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("core.City", b =>
+                {
+                    b.HasOne("core.Province", "Province")
+                        .WithMany("Cities")
+                        .HasForeignKey("ProvinceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("core.Post", b =>
@@ -442,6 +592,10 @@ namespace core.Migrations
                         .HasForeignKey("TgoodsAttributeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("core.Torder", null)
+                        .WithMany("TgoodsAttributeValues")
+                        .HasForeignKey("TorderId");
                 });
 
             modelBuilder.Entity("core.TgoodsImage", b =>
@@ -464,6 +618,14 @@ namespace core.Migrations
 
             modelBuilder.Entity("core.Torder", b =>
                 {
+                    b.HasOne("core.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId");
+
+                    b.HasOne("core.Tfactor", "Tfactor")
+                        .WithMany("Torders")
+                        .HasForeignKey("TfactorId");
+
                     b.HasOne("core.Tgoods", "Tgoods")
                         .WithMany("Torders")
                         .HasForeignKey("TgoodsId")
@@ -478,7 +640,7 @@ namespace core.Migrations
                         .HasForeignKey("TgoodsAttributeValueId");
 
                     b.HasOne("core.Torder", "Torder")
-                        .WithMany("TordergoodsAttributeValues")
+                        .WithMany()
                         .HasForeignKey("TorderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

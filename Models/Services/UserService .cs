@@ -9,14 +9,14 @@ using Core.Helpers;
 using Core.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 namespace Core.Services
 {
     public interface IUserService
     {
         AuthenticateResponse Authenticate(AuthenticateRequest model);
         IEnumerable<User> GetAll();
+        User GetByUsername(String username);
+
     }
 
     public class UserService : IUserService
@@ -43,7 +43,6 @@ namespace Core.Services
 
             // authentication successful so generate jwt token
             var token = generateJwtToken(user);
-
             return new AuthenticateResponse(user, token);
         }
 
@@ -70,6 +69,27 @@ namespace Core.Services
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
+        }
+
+
+        User IUserService.GetByUsername(string username)
+        {
+            return _context.Users.Where(x=>x.Username==username).SingleOrDefault();
         }
     }
 }

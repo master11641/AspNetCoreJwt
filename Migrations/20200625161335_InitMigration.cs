@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace core.Migrations
 {
-    public partial class CreateShopTables : Migration
+    public partial class InitMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -22,6 +22,35 @@ namespace core.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Advers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Blogs",
+                columns: table => new
+                {
+                    BlogId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Url = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Blogs", x => x.BlogId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Provinces",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: false),
+                    Center = table.Column<string>(nullable: false),
+                    ProvinceDate = table.Column<int>(nullable: false),
+                    Code = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Provinces", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -65,6 +94,78 @@ namespace core.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tfactors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tfactors", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    Username = table.Column<string>(nullable: true),
+                    Password = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Posts",
+                columns: table => new
+                {
+                    PostId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(nullable: true),
+                    Content = table.Column<string>(nullable: true),
+                    BlogId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Posts", x => x.PostId);
+                    table.ForeignKey(
+                        name: "FK_Posts_Blogs_BlogId",
+                        column: x => x.BlogId,
+                        principalTable: "Blogs",
+                        principalColumn: "BlogId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cities",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: false),
+                    Center = table.Column<string>(nullable: true),
+                    Code = table.Column<int>(nullable: false),
+                    DateCity = table.Column<int>(nullable: false),
+                    ProvinceId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cities_Provinces_ProvinceId",
+                        column: x => x.ProvinceId,
+                        principalTable: "Provinces",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tstores",
                 columns: table => new
                 {
@@ -76,6 +177,7 @@ namespace core.Migrations
                     Address = table.Column<string>(nullable: true),
                     IsFreeDeliveryExist = table.Column<bool>(nullable: false),
                     ImageUrl = table.Column<string>(nullable: true),
+                    LogoImageUrl = table.Column<string>(nullable: true),
                     IsConfirm = table.Column<bool>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
                     UserOwner = table.Column<string>(nullable: true)
@@ -87,6 +189,40 @@ namespace core.Migrations
                         name: "FK_Tstores_TcategoryStores_TcategoryStoreId",
                         column: x => x.TcategoryStoreId,
                         principalTable: "TcategoryStores",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Addresses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(nullable: false),
+                    NameDeliver = table.Column<string>(nullable: false),
+                    MobileDeliver = table.Column<string>(nullable: false),
+                    PhoneDeliver = table.Column<string>(nullable: true),
+                    CityId = table.Column<int>(nullable: true),
+                    Sector = table.Column<string>(nullable: true),
+                    FullAddress = table.Column<string>(nullable: true),
+                    PostalCode = table.Column<string>(nullable: true),
+                    Longitude = table.Column<string>(nullable: true),
+                    Latitude = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Addresses_Cities_CityId",
+                        column: x => x.CityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Addresses_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -208,6 +344,18 @@ namespace core.Migrations
                 {
                     table.PrimaryKey("PK_Torders", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Torders_Addresses_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Addresses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Torders_Tfactors_TfactorId",
+                        column: x => x.TfactorId,
+                        principalTable: "Tfactors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Torders_Tgoodses_TgoodsId",
                         column: x => x.TgoodsId,
                         principalTable: "Tgoodses",
@@ -223,7 +371,8 @@ namespace core.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Value = table.Column<string>(nullable: true),
                     Caption = table.Column<string>(nullable: true),
-                    TgoodsAttributeId = table.Column<int>(nullable: false)
+                    TgoodsAttributeId = table.Column<int>(nullable: false),
+                    TorderId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -234,6 +383,12 @@ namespace core.Migrations
                         principalTable: "TgoodsAttributes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TgoodsAttributeValues_Torders_TorderId",
+                        column: x => x.TorderId,
+                        principalTable: "Torders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -262,6 +417,26 @@ namespace core.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Addresses_CityId",
+                table: "Addresses",
+                column: "CityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Addresses_UserId",
+                table: "Addresses",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cities_ProvinceId",
+                table: "Cities",
+                column: "ProvinceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_BlogId",
+                table: "Posts",
+                column: "BlogId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TcategoryGoodss_ParentID",
                 table: "TcategoryGoodss",
                 column: "ParentID");
@@ -280,6 +455,11 @@ namespace core.Migrations
                 name: "IX_TgoodsAttributeValues_TgoodsAttributeId",
                 table: "TgoodsAttributeValues",
                 column: "TgoodsAttributeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TgoodsAttributeValues_TorderId",
+                table: "TgoodsAttributeValues",
+                column: "TorderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tgoodses_TcategoryGoodsId",
@@ -307,6 +487,16 @@ namespace core.Migrations
                 column: "TgoodsAttributeValueId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Torders_AddressId",
+                table: "Torders",
+                column: "AddressId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Torders_TfactorId",
+                table: "Torders",
+                column: "TfactorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Torders_TgoodsId",
                 table: "Torders",
                 column: "TgoodsId");
@@ -323,6 +513,9 @@ namespace core.Migrations
                 name: "Advers");
 
             migrationBuilder.DropTable(
+                name: "Posts");
+
+            migrationBuilder.DropTable(
                 name: "TgoodsImages");
 
             migrationBuilder.DropTable(
@@ -332,22 +525,40 @@ namespace core.Migrations
                 name: "TordergoodsAttributeValues");
 
             migrationBuilder.DropTable(
-                name: "TgoodsAttributeValues");
+                name: "Blogs");
 
             migrationBuilder.DropTable(
-                name: "Torders");
+                name: "TgoodsAttributeValues");
 
             migrationBuilder.DropTable(
                 name: "TgoodsAttributes");
 
             migrationBuilder.DropTable(
+                name: "Torders");
+
+            migrationBuilder.DropTable(
+                name: "Addresses");
+
+            migrationBuilder.DropTable(
+                name: "Tfactors");
+
+            migrationBuilder.DropTable(
                 name: "Tgoodses");
+
+            migrationBuilder.DropTable(
+                name: "Cities");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "TcategoryGoodss");
 
             migrationBuilder.DropTable(
                 name: "Tstores");
+
+            migrationBuilder.DropTable(
+                name: "Provinces");
 
             migrationBuilder.DropTable(
                 name: "TcategoryStores");

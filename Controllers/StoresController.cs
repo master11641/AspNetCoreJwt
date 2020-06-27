@@ -45,6 +45,7 @@ public class StoresController : Controller {
                     x.Title,
                     x.ImageUrl,
                     x.Address,
+                    x.LogoImageUrl,
                     x.IsFreeDeliveryExist,
                     x.TcategoryStoreId,
                 }).ToList()

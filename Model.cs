@@ -26,11 +26,14 @@ namespace core {
         public DbSet<Tgoods> Tgoodses { get; set; }
         public DbSet<TcategoryStore> TcategoryStores { get; set; }
         public DbSet<TcategoryGoods> TcategoryGoodss { get; set; }
-
+        public DbSet<Province> Provinces { get; set; }
+         public DbSet<Tfactor> Tfactors { get; set; }
+        public DbSet<City> Cities { get; set; }
+         public DbSet<Address> Addresses { get; set; }
         public DbSet<Adver> Advers { get; set; }
 
-        protected override void OnConfiguring (DbContextOptionsBuilder options) => options.UseSqlServer (@"Data Source=(local);Initial Catalog=Blog;Integrated Security = true;MultipleActiveResultSets=true");
-
+        protected override void OnConfiguring (DbContextOptionsBuilder options) => options.UseSqlServer (@"Data Source=158.58.187.220\MSSQLSERVER2017;Initial Catalog=persia31_siadune;Integrated Security = False;User ID=persia31;pwd=6W34dYzbd3;");
+        //protected override void OnConfiguring (DbContextOptionsBuilder options) => options.UseSqlServer (@"Data Source=(local);Initial Catalog=Blog;Integrated Security = true;MultipleActiveResultSets=true");
         protected override void OnModelCreating (ModelBuilder modelBuilder) {
             modelBuilder.Entity<TordergoodsAttributeValues> ().HasKey (sc => new { sc.TorderId, sc.GoodsAttributeValueId });
             modelBuilder.Entity<TcategoryGoods> ().HasOne (x => x.Parent).WithMany (x => x.Children).HasForeignKey (x => x.ParentID);
@@ -51,6 +54,91 @@ namespace core {
 
         [JsonIgnore]
         public string Password { get; set; }
+        public virtual ICollection<Address> Addresses { get; set; }
+    }
+    public class Address {
+        public int Id { get; set; }
+
+        [ForeignKey ("UserId")]
+        public virtual User User { get; set; }
+
+        public int UserId { get; set; }
+
+        [Display (Name = "نام و نام خانوادگی تحویل گیرنده")]
+        [Required (ErrorMessage = "تکمیل نام و نام خانوادگی تحویل گیرنده الزامی است .")]
+        public string NameDeliver { get; set; }
+
+        [Display (Name = "شماره همراه تحویل گیرنده")]
+        [UIHint ("MobileNumber")]
+        [Required (ErrorMessage = "تکمیل فیلد شماره همراه تحویل گیرنده الزامی است .")]
+        public string MobileDeliver { get; set; }
+
+        [Display (Name = "شماره تلفن ثابت تحویل گیرنده")]
+        public string PhoneDeliver { get; set; }
+
+        [Display (Name = "شهر محل سکونت تحویل گیرنده")]
+        [ForeignKey ("CityId")]
+        public City City { get; set; }
+
+        [Display (Name = "شهر محل سکونت تحویل گیرنده")]
+        // [Required(ErrorMessage = "انتخاب شهر الزامی است .")]
+        public int? CityId { get; set; }
+
+        public string Sector { get; set; }
+
+        // [Required(ErrorMessage = "تکمیل فیلد آدرس الزامی است .")]
+        [Display (Name = "آدرس کامل")]
+        [UIHint ("MultiLineText")]
+        public string FullAddress { get; set; }
+
+        [Display (Name = "کد پستی")]
+        public string PostalCode { get; set; }
+
+        public string Longitude { get; set; }
+        public string Latitude { get; set; }
+    }
+    public class City {
+        public int Id { get; set; }
+
+        [Required (ErrorMessage = "تکمیل فیلد نام الزامی است .")]
+        [Display (Name = "نام شهرستان")]
+        public string Name { get; set; }
+
+        [Display (Name = "مرکز شهرستان")]
+        public string Center { get; set; }
+
+        [Display (Name = "کد شهرستان")]
+        public int Code { get; set; }
+
+        [Display (Name = "سال انتزاع")]
+        public int DateCity { get; set; }
+
+        [UIHint ("GridForeignKey")]
+        [Display (Name = "استان مربوطه")]
+        public int ProvinceId { get; set; }
+
+        [ForeignKey ("ProvinceId")]
+        public virtual Province Province { get; set; }
+
+        public virtual ICollection<Address> Addresses { get; set; }
+    }
+    public class Province {
+        public int Id { get; set; }
+
+        [Required (ErrorMessage = "تکمیل فیلد نام الزامی است .")]
+        [Display (Name = "نام استان")]
+        public string Name { get; set; }
+
+        [Required (ErrorMessage = "تکمیل فیلد مرکز استان الزامی است .")]
+        [Display (Name = "مرکز استان")]
+        public string Center { get; set; }
+
+        [Display (Name = "سال تفکیک")]
+        public int ProvinceDate { get; set; }
+
+        [Display (Name = "کد استان")]
+        public int Code { get; set; }
+        public virtual ICollection<City> Cities { get; set; }
     }
     public class TordergoodsAttributeValues {
         public int TorderId { get; set; }
@@ -94,6 +182,7 @@ namespace core {
         public string Address { get; set; }
         public bool IsFreeDeliveryExist { get; set; }
         public string ImageUrl { get; set; }
+        public string LogoImageUrl { get; set; }
         public bool IsConfirm { get; set; }
         public bool IsDeleted { get; set; }
         public List<Tgoods> Tgoodses { get; set; }
@@ -119,19 +208,23 @@ namespace core {
         public int TgoodsId { get; set; }
         public string UserName { get; set; }
         public int Count { get; set; }
-        public virtual List<TordergoodsAttributeValues> TordergoodsAttributeValues { get; set; }
+        public virtual List<TgoodsAttributeValue> TgoodsAttributeValues { get; set; }
         public int? TfactorId { get; set; }
         public TorderStatus TorderStatus { get; set; }
 
-        // [ForeignKey("TfactorId")]
-        // public Tfactor Tfactor { get; set; }
+        [ForeignKey("TfactorId")]
+        public Tfactor Tfactor { get; set; }
 
         public int? AddressId { get; set; }
 
-        //[ForeignKey("AddressId")]
-        // public Address Address { get; set; }
+        [ForeignKey("AddressId")]
+        public Address Address { get; set; }
     }
-
+  public class Tfactor 
+    {
+         public int Id { get; set; }
+        public ICollection<Torder> Torders { get; set; }
+    }
     public class TgoodsPrice {
         public int Id { get; set; }
         public decimal Price { get; set; }
