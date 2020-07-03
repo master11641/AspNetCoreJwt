@@ -220,6 +220,9 @@ namespace core.Migrations
                     b.Property<int?>("ParentID")
                         .HasColumnType("int");
 
+                    b.Property<bool?>("ShowInFirstPage")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
@@ -379,7 +382,7 @@ namespace core.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 6)");
 
                     b.Property<int>("TgoodsId")
                         .HasColumnType("int");
@@ -514,6 +517,17 @@ namespace core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("core.hierarchyDTO", b =>
+                {
+                    b.Property<int>("Depth")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Item_id")
+                        .HasColumnType("int");
+
+                    b.ToTable("hierarchyDTO");
                 });
 
             modelBuilder.Entity("core.Address", b =>

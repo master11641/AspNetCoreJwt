@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -27,14 +28,16 @@ namespace core {
         public DbSet<TcategoryStore> TcategoryStores { get; set; }
         public DbSet<TcategoryGoods> TcategoryGoodss { get; set; }
         public DbSet<Province> Provinces { get; set; }
-         public DbSet<Tfactor> Tfactors { get; set; }
+        public DbSet<Tfactor> Tfactors { get; set; }
         public DbSet<City> Cities { get; set; }
-         public DbSet<Address> Addresses { get; set; }
+        public DbSet<Address> Addresses { get; set; }
         public DbSet<Adver> Advers { get; set; }
 
         protected override void OnConfiguring (DbContextOptionsBuilder options) => options.UseSqlServer (@"Data Source=158.58.187.220\MSSQLSERVER2017;Initial Catalog=persia31_siadune;Integrated Security = False;User ID=persia31;pwd=6W34dYzbd3;");
-        //protected override void OnConfiguring (DbContextOptionsBuilder options) => options.UseSqlServer (@"Data Source=(local);Initial Catalog=Blog;Integrated Security = true;MultipleActiveResultSets=true");
+       // protected override void OnConfiguring (DbContextOptionsBuilder options) => options.UseSqlServer (@"Data Source=(local);Initial Catalog=Blog;Integrated Security = true;MultipleActiveResultSets=true");
         protected override void OnModelCreating (ModelBuilder modelBuilder) {
+           modelBuilder.Entity<hierarchyDTO>().HasNoKey();
+           
             modelBuilder.Entity<TordergoodsAttributeValues> ().HasKey (sc => new { sc.TorderId, sc.GoodsAttributeValueId });
             modelBuilder.Entity<TcategoryGoods> ().HasOne (x => x.Parent).WithMany (x => x.Children).HasForeignKey (x => x.ParentID);
             modelBuilder.Entity<TcategoryStore> ().HasOne (x => x.Parent).WithMany (x => x.Children).HasForeignKey (x => x.ParentID);
@@ -42,7 +45,13 @@ namespace core {
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
+            foreach (var property in modelBuilder.Model.GetEntityTypes ()
+                    .SelectMany (t => t.GetProperties ())
+                    .Where (p => p.ClrType == typeof (decimal) || p.ClrType == typeof (decimal?)))
+                     {      
+                     property.SetColumnType ("decimal(18, 6)");
 
+                     }
         }
 
     }
@@ -212,17 +221,16 @@ namespace core {
         public int? TfactorId { get; set; }
         public TorderStatus TorderStatus { get; set; }
 
-        [ForeignKey("TfactorId")]
+        [ForeignKey ("TfactorId")]
         public Tfactor Tfactor { get; set; }
 
         public int? AddressId { get; set; }
 
-        [ForeignKey("AddressId")]
+        [ForeignKey ("AddressId")]
         public Address Address { get; set; }
     }
-  public class Tfactor 
-    {
-         public int Id { get; set; }
+    public class Tfactor {
+        public int Id { get; set; }
         public ICollection<Torder> Torders { get; set; }
     }
     public class TgoodsPrice {
@@ -329,6 +337,14 @@ namespace core {
         public List<TgoodsPrice> TgoodsPrices { get; set; }
         public List<TgoodsAttribute> TgoodsAttributes { get; set; }
     }
+    
+    public class hierarchyDTO {
+           
+        public int Item_id { get; set; }
+         public int Depth { get; set; }
+
+    }
+    [NotMapped]
     public class TcategoryStore {
         public TcategoryStore () {
             Children = new List<TcategoryStore> ();
@@ -339,7 +355,7 @@ namespace core {
 
         [Display (Name = "گروه والد")]
         public int? ParentID { get; set; }
-
+        public bool? ShowInFirstPage { get; set; }
         public virtual TcategoryStore Parent { get; set; }
         public List<TcategoryStore> Children { get; set; }
         public List<Tstore> Tstores { get; set; }

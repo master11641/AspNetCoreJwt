@@ -150,3 +150,4 @@ C:\Users\alireza\Desktop\core\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Pr
 C:\Users\alireza\Desktop\core\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\alireza\Desktop\core\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Tokens.dll
 C:\Users\alireza\Desktop\core\bin\Debug\netcoreapp3.1\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\alireza\Desktop\core\bin\Debug\netcoreapp3.1\libman.json

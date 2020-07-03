@@ -10,8 +10,8 @@ using core;
 namespace core.Migrations
 {
     [DbContext(typeof(BloggingContext))]
-    [Migration("20200625161335_InitMigration")]
-    partial class InitMigration
+    [Migration("20200703072459_SpStoreCategoryRecursive")]
+    partial class SpStoreCategoryRecursive
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -222,6 +222,9 @@ namespace core.Migrations
                     b.Property<int?>("ParentID")
                         .HasColumnType("int");
 
+                    b.Property<bool?>("ShowInFirstPage")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
@@ -381,7 +384,7 @@ namespace core.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 6)");
 
                     b.Property<int>("TgoodsId")
                         .HasColumnType("int");
